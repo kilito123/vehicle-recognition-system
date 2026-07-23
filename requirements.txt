@@ -1,0 +1,23 @@
+# 车辆识别系统 - 依赖包
+
+# 计算机视觉
+opencv-python>=4.5.0
+opencv-contrib-python>=4.5.0
+
+# 数值计算
+numpy>=1.21.0
+
+# OCR文字识别
+pytesseract>=0.3.8
+Pillow>=9.0.0
+
+# Web框架
+Flask>=2.0.0
+Werkzeug>=2.0.0
+
+# 数据可视化
+matplotlib>=3.5.0
+
+# 工具库
+imutils>=0.5.4
+scipy>=1.7.0
