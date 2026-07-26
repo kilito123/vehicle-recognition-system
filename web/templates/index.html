@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>车辆识别系统 | Vehicle Recognition System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <header>
+            <h1>🚗 车辆识别系统</h1>
+            <p class="subtitle">基于深度学习的车辆检测与车牌识别</p>
+        </header>
+
+        <!-- 功能介绍 -->
+        <section class="features">
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h3>车辆检测</h3>
+                <p>使用YOLO模型实时检测轿车、卡车、公交车、摩托车</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📋</div>
+                <h3>车牌识别</h3>
+                <p>精准定位车牌区域并进行OCR文字识别</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h3>特征分析</h3>
+                <p>自动分析车辆颜色和类型信息</p>
+            </div>
+        </section>
+
+        <!-- 上传区域 -->
+        <section class="upload-section">
+            <h2>上传图像进行检测</h2>
+
+            {% if error %}
+            <div class="error-message">{{ error }}</div>
+            {% endif %}
+
+            <form action="/detect" method="post" enctype="multipart/form-data" id="upload-form">
+                <div class="upload-area" id="drop-zone">
+                    <div class="upload-icon">📤</div>
+                    <p>拖拽图像到此处，或 <span class="upload-link">点击选择</span></p>
+                    <p class="upload-hint">支持 JPG, PNG, BMP 格式</p>
+                    <input type="file" name="image" id="file-input" accept="image/*" required>
+                </div>
+                <button type="submit" class="btn-primary" id="submit-btn">
+                    开始识别
+                </button>
+            </form>
+
+            <!-- 预览 -->
+            <div class="preview-section" id="preview-section" style="display: none;">
+                <h3>预览</h3>
+                <img id="preview-img" src="" alt="预览">
+            </div>
+
+            <!-- 加载中 -->
+            <div class="loading" id="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>正在分析中，请稍候...</p>
+            </div>
+        </section>
+
+        <!-- 实时摄像头 -->
+        <section class="camera-section">
+            <h2>实时摄像头检测</h2>
+            <div class="camera-container">
+                <video id="camera-video" autoplay playsinline></video>
+                <canvas id="camera-canvas" style="display: none;"></canvas>
+                <div class="camera-overlay" id="camera-overlay">
+                    <button class="btn-primary" id="start-camera">开启摄像头</button>
+                </div>
+                <div class="camera-results" id="camera-results"></div>
+            </div>
+        </section>
+
+        <!-- 使用说明 -->
+        <section class="usage-section">
+            <h2>使用说明</h2>
+            <div class="usage-grid">
+                <div class="usage-step">
+                    <div class="step-number">1</div>
+                    <h4>上传图像</h4>
+                    <p>选择包含车辆的图像文件上传</p>
+                </div>
+                <div class="usage-step">
+                    <div class="step-number">2</div>
+                    <h4>AI分析</h4>
+                    <p>系统自动检测车辆、车牌并识别</p>
+                </div>
+                <div class="usage-step">
+                    <div class="step-number">3</div>
+                    <h4>查看结果</h4>
+                    <p>获取详细的检测报告和标注图像</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 页脚 -->
+        <footer>
+            <p>车辆识别系统 v1.0 | 基于 YOLO + Tesseract OCR</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

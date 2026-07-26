@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>检测结果 | Vehicle Recognition</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚗 车辆识别系统</h1>
+            <a href="/" class="btn-secondary">← 返回首页</a>
+        </header>
+
+        <section class="results-section">
+            <h2>检测结果</h2>
+
+            <!-- 统计卡片 -->
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-number">{{ result.vehicle_count }}</div>
+                    <div class="stat-label">检测到的车辆</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ result.total_plates }}</div>
+                    <div class="stat-label">车牌数量</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ result.recognized_plates }}</div>
+                    <div class="stat-label">识别成功</div>
+                </div>
+            </div>
+
+            <!-- 图像对比 -->
+            <div class="image-comparison">
+                <div class="image-box">
+                    <h3>原始图像</h3>
+                    <img src="{{ original }}" alt="原始图像">
+                </div>
+                <div class="image-box">
+                    <h3>检测结果</h3>
+                    <img src="{{ annotated }}" alt="检测结果">
+                </div>
+            </div>
+
+            <!-- 详细信息 -->
+            <div class="details-section">
+                <h3>车辆详细信息</h3>
+
+                {% for vehicle in result.vehicles %}
+                <div class="vehicle-detail-card">
+                    <div class="vehicle-header">
+                        <h4>车辆 #{{ vehicle.vehicle_id }}</h4>
+                        <span class="confidence-badge">
+                            置信度: {{ "%.1f"|format(vehicle.detection_confidence * 100) }}%
+                        </span>
+                    </div>
+
+                    <div class="vehicle-info-grid">
+                        <div class="info-item">
+                            <span class="info-label">类型</span>
+                            <span class="info-value">{{ vehicle.vehicle_type.subtype }}</span>
+                            <span class="info-sub">{{ vehicle.vehicle_type.base_type }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">颜色</span>
+                            <span class="info-value">{{ vehicle.vehicle_color.primary_color }}</span>
+                            <span class="info-sub">置信度: {{ "%.1f"|format(vehicle.vehicle_color.color_confidence * 100) }}%</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">车牌数</span>
+                            <span class="info-value">{{ vehicle.plate_count }}</span>
+                        </div>
+                    </div>
+
+                    {% if vehicle.plates %}
+                    <div class="plates-section">
+                        <h5>识别到的车牌</h5>
+                        {% for plate in vehicle.plates %}
+                        <div class="plate-item">
+                            <span class="plate-text">{{ plate.plate_text or '未识别' }}</span>
+                            <span class="plate-confidence">
+                                OCR置信度: {{ "%.1f"|format(plate.confidence * 100) }}%
+                            </span>
+                            {% if plate.plate_info and plate.plate_info.is_valid %}
+                            <span class="plate-valid">✓ 格式有效</span>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- 重新检测 -->
+            <div class="actions">
+                <a href="/" class="btn-primary">检测另一张图像</a>
+                <a href="{{ annotated }}" download class="btn-secondary">下载结果</a>
+            </div>
+        </section>
+
+        <footer>
+            <p>车辆识别系统 v1.0</p>
+        </footer>
+    </div>
+</body>
+</html>
